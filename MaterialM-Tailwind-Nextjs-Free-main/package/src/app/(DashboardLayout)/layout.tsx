@@ -17,7 +17,7 @@ export default function Layout({
           <Header />
           {/* Body Content  */}
           <div
-            className={`container mx-auto  py-30`}
+            className={`container px-4 py-12`}
           >
             {children}
           </div>

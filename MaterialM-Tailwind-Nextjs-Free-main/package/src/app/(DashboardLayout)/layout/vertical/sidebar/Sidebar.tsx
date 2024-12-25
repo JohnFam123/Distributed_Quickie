@@ -7,8 +7,11 @@ import NavItems from "./NavItems";
 import NavCollapse from "./NavCollapse";
 import SimpleBar from "simplebar-react";
 import FullLogo from "../../shared/logo/FullLogo";
+import WaterMonitorLogo from "@public/images/logos/monitor-water-svgrepo-com.svg";
 import { Icon } from "@iconify/react";
 import Upgrade from "./Upgrade";
+import Image from 'next/image';
+import Link from 'next/link';
 
 const SidebarLayout = () => {
   return (
@@ -19,8 +22,8 @@ const SidebarLayout = () => {
             className="fixed menu-sidebar pt-6 bg-white dark:bg-darkgray z-[10]"
             aria-label="Sidebar with multi-level dropdown example"
           >
-            <div className="mb-7 px-4 brand-logo">
-              <FullLogo />
+            <div className="mb-7 px-4 brand-logo text-sky-600 text-2xl">
+              Water Monitoring
             </div>
 
             <SimpleBar className="h-[calc(100vh_-_120px)]">
@@ -52,7 +55,7 @@ const SidebarLayout = () => {
                   ))}
                 </Sidebar.ItemGroup>
               </Sidebar.Items>
-              <Upgrade/>
+              {/* <Upgrade/> */}
             </SimpleBar>
           </Sidebar>
         </div>

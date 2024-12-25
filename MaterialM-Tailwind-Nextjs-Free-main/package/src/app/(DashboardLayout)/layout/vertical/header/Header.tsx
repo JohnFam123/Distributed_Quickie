@@ -60,9 +60,9 @@ const Header = () => {
             </div>
 
             <div className="flex gap-4 items-center">
-              <Button as={Link} href="https://www.wrappixel.com/templates/materialm-next-js-tailwind-dashboard-template/?ref=33" target="_blank" size={'sm'} color={"primary"}>
+              {/* <Button as={Link} href="https://www.wrappixel.com/templates/materialm-next-js-tailwind-dashboard-template/?ref=33" target="_blank" size={'sm'} color={"primary"}>
                 Upgrade To Pro 
-              </Button>
+              </Button> */}
               <Profile />
             </div>
           </div>
