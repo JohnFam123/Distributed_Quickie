@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useDeferredValue } from "react";
 import { Badge, Dropdown, Progress } from "flowbite-react";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { Icon } from "@iconify/react";
@@ -22,7 +22,7 @@ const getStatusColor = (status: any) => {
     case "Very bad":
       return "error";
     default:
-      return "white";
+      return "";
   }
 }
 
@@ -32,7 +32,7 @@ function derivedStatus(v: number) {
   else if (v >= 46 && v <= 70) return "Normal";
   else if (v >= 26 && v <= 45) return "Bad";
   else if (v >= 0 && v <= 25) return "Very bad";
-  else return "Error";
+  else return "";
 }
 
 
@@ -101,6 +101,7 @@ function calculate_qCOD(COD: number) {
 
 // Convert the N-NH4 value
 function calculate_qNNH4(vl: number) {
+  if (vl == 0) return -1
   if (vl <= 0.3) {
     return 100;
   } else if (0.3 < vl && vl < 1.7) {
@@ -134,6 +135,7 @@ function calculate_qPPO4(vl: number) {
 
 // Convert the Aeromonas value
 function calculate_qAeromonas(vl: number) {
+  if (vl == 0) return -1
   if (vl <= 1000) {
     return 100;
   } else if (1000 < vl && vl < 3000) {
@@ -148,8 +150,7 @@ const PopularProducts = () => {
   const diemQuanTrac = useDashboardStore((state) => state.diemQuanTrac);
   const { data, isLoading } = useDiemQuanTrac(diemQuanTrac)
 
-  if (isLoading) return <div>Loading...</div>
-  const { ph, do: DO, conductivity, n_no2, n_nh4, p_po4, tss, cod, aeromonas_total } = data.data.at(-1)
+  const { ph, do: DO, conductivity, n_no2, n_nh4, p_po4, tss, cod, aeromonas_total } = isLoading ? {} : data.data.at(-1)
 
   const ProductTableData = [
     {
@@ -206,8 +207,9 @@ const PopularProducts = () => {
       process: calculate_qAeromonas(aeromonas_total),
       statustext: derivedStatus(calculate_qAeromonas(aeromonas_total)),
     }
-
   ];
+
+  const deferredProductTableData = useDeferredValue(ProductTableData)
 
   /*Table Action*/
   const tableActionData = [
@@ -225,8 +227,6 @@ const PopularProducts = () => {
     },
   ];
 
-  console.log(ProductTableData)
-
   return (
     <>
       <div className="rounded-lg dark:shadow-dark-md shadow-md bg-white dark:bg-darkgray py-6 px-0 relative w-full break-words">
@@ -243,7 +243,7 @@ const PopularProducts = () => {
                 <Table.HeadCell></Table.HeadCell>
               </Table.Head>
               <Table.Body className="divide-y divide-border dark:divide-darkborder ">
-                {ProductTableData.map((item, index) => (
+                {deferredProductTableData.map((item, index) => (
                   <Table.Row key={index}>
                     <Table.Cell className="whitespace-nowrap ps-6">
                       <div className="flex gap-3 items-center">

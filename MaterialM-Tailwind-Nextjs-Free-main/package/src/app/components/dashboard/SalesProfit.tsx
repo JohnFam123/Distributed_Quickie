@@ -1,10 +1,8 @@
 "use client";
+import { usePrediction } from '@/app/query/global';
 import { useDashboardStore } from "@/app/store/global";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/en";
-import { ToggleSwitch } from "flowbite-react";
+import { Select, ToggleSwitch } from "flowbite-react";
 import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
 
@@ -12,8 +10,9 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const SalesProfit = () => {
   const [predictMode, setPredictMode] = useState(false);
-  const [predictRange, setPredictRange] = useState<Dayjs>(dayjs());
+  const [predictRange, setPredictRange] = useState<number>(0);
   const diemQuanTrac = useDashboardStore((state) => state.diemQuanTrac);
+  const { data, isLoading } = usePrediction(diemQuanTrac)
 
   // chart
   const optionscolumnchart: any = {
@@ -101,52 +100,60 @@ const SalesProfit = () => {
 
   const historicalData = {
     name: "Historical",
-    data: [
-      { x: new Date("2024-03-01").getTime(), y: 65 },
-      { x: new Date("2024-03-08").getTime(), y: 70 },
-      { x: new Date("2024-03-15").getTime(), y: 75 },
-      { x: new Date("2024-03-22").getTime(), y: 80 },
-      { x: new Date("2024-04-01").getTime(), y: 85 },
-    ],
+    data: isLoading ? [] : data.history.map((item: any) => ({
+      x: new Date(item.time).getTime(),
+      y: item.actual_wqi
+    }))
   };
 
   const predictionData = {
     name: "Prediction",
-    data: [
-      { x: new Date("2024-04-01").getTime(), y: 85 },
-      { x: new Date("2024-04-08").getTime(), y: 88 },
-      { x: new Date("2024-04-15").getTime(), y: 92 },
-      { x: new Date("2024-04-22").getTime(), y: 95 },
-      { x: new Date("2024-04-29").getTime(), y: 98 },
-    ],
+    data: isLoading ? [] : data.predicted.map((item: any) => ({
+      x: new Date(item.date).getTime(),
+      y: item.predicted_wqi.toFixed(2)
+    }))
   };
 
   const chartData = useMemo(() => {
     const data = [historicalData];
     if (predictMode) {
-      data.push(predictionData);
+      let processedPredictionData = predictionData.data.filter((_: any, index: number) => index < predictRange);
+      processedPredictionData.unshift(historicalData.data.at(-1));
+      data.push({
+        ...predictionData,
+        data: processedPredictionData
+      });
     }
     return data;
-  }, [predictMode]);
+  }, [predictMode, historicalData, predictionData]);
 
   return (
     <div className="rounded-lg dark:shadow-dark-md shadow-md bg-white dark:bg-darkgray p-6 relative w-full break-words">
-      <div>
+      <div className="flex justify-between items-center">
         <h5 className="card-title">Water Monitoring</h5>
-        <div className="flex justify-between items-center gap-4">
+        <div className="flex justify-end items-center gap-4">
           <label htmlFor="predict-mode">Prediction Mode</label>
           <ToggleSwitch
             checked={predictMode}
             onChange={() => setPredictMode((prev) => !prev)}
             id="predict-mode"
           />
-          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en">
-            <DatePicker
-              disabled={!predictMode}
-              minDate={dayjs()}
-              onChange={(value) => setPredictRange(dayjs(value))}
-            />
-          </LocalizationProvider>
+          <Select
+            disabled={!predictMode}
+            onChange={(e) =>
+              setPredictRange(parseInt((e.target as HTMLSelectElement).value))}
+          >
+            <option value={1}>1 Week</option>
+            <option value={2}>2 Weeks</option>
+            <option value={3}>3 Weeks</option>
+            <option value={4}>4 Weeks</option>
+            <option value={5}>5 Weeks</option>
+            <option value={6}>6 Weeks</option>
+            <option value={7}>7 Weeks</option>
+            <option value={8}>8 Weeks</option>
+            <option value={9}>9 Weeks</option>
+            <option value={10}>10 Weeks</option>
+          </Select>
         </div>
       </div>
 

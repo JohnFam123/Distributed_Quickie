@@ -23,6 +23,16 @@ export const useDiemQuanTrac = (id: number) => {
     })
 }
 
+export const usePrediction = (id: number) => {
+    return useQuery({
+        queryKey: ['prediction', id],
+        queryFn: async () => {
+            const data = await (axios.get(backendUrl + '/api/v1/predict/' + id)).then(res => res.data)
+            return data
+        }
+    })
+}
+
 // export const useDiemQuanTracList = () => {
 //     return useQuery({
 //         queryKey: ['diemQuanTracList'],
