@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Badge, Button, Navbar } from "flowbite-react";
 import { Icon } from "@iconify/react";
 import Profile from "./Profile";
@@ -7,12 +7,14 @@ import FullLogo from "../../shared/logo/FullLogo";
 import { Drawer } from "flowbite-react";
 import MobileSidebar from "../sidebar/MobileSidebar";
 import Link from "next/link";
-import { Select } from 'flowbite-react';
-import { useDashboardStore } from '@/app/store/global';
+import { Select } from "flowbite-react";
+import { useDashboardStore } from "@/app/store/global";
+import { useDiemQuanTracList } from "@/app/query/global";
 
 const Header = () => {
   const [isSticky, setIsSticky] = useState(false);
-  const { setDiemQuanTrac, setTinh, setHuyen } = useDashboardStore();
+  const { setDiemQuanTrac } = useDashboardStore();
+  const { data, isLoading } = useDiemQuanTracList();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,6 +35,7 @@ const Header = () => {
   // mobile-sidebar
   const [isOpen, setIsOpen] = useState(false);
   const handleClose = () => setIsOpen(false);
+
   return (
     <>
       <header
@@ -57,29 +60,44 @@ const Header = () => {
               </span>
               <span className="h-10 w-10 hover:text-primary hover:bg-lightprimary rounded-full flex justify-center items-center cursor-pointer relative">
                 <Icon icon="solar:bell-linear" height={20} />
-                <Badge className="h-2 w-2 rounded-full absolute end-2 top-1 bg-primary p-0"></Badge>
+                <Badge className="h-2 w-2 rounded-full absolute end-2 top-1 bg-primary p-0">
+                </Badge>
               </span>
             </div>
 
-            <div className="flex gap-4">
-              <Select id="diemQuanTrac" onChange={(e) => setDiemQuanTrac(e.target.value)}>
-                <option>a</option>
-                <option>b</option>
+            <div className="flex gap-4 items-center">
+              <label htmlFor="diemQuanTrac">Điểm quan trắc</label>
+              <Select
+                id="diemQuanTrac"
+                onChange={(e) =>
+                  setDiemQuanTrac(
+                    parseInt((e.target as HTMLSelectElement).value),
+                  )}
+              >
+                {isLoading
+                  ? <option>Loading...</option>
+                  : Object.keys(data).map((key) => (
+                    <option key={key} value={data[key]}>{key}</option>
+                  ))}
               </Select>
-              <Select id="tinh" onChange={(e) => setTinh(e.target.value)}>
+              {
+                /* <Select id="tinh" onChange={(e) => setTinh(e.target.value)}>
                 <option>c</option>
                 <option>d</option>
               </Select>
               <Select id="huyen" onChange={(e) => setHuyen(e.target.value)}>
                 <option>e</option>
                 <option>f</option>
-              </Select>
+              </Select> */
+              }
             </div>
 
             <div className="flex gap-4 items-center">
-              {/* <Button as={Link} href="https://www.wrappixel.com/templates/materialm-next-js-tailwind-dashboard-template/?ref=33" target="_blank" size={'sm'} color={"primary"}>
-                Upgrade To Pro 
-              </Button> */}
+              {
+                /* <Button as={Link} href="https://www.wrappixel.com/templates/materialm-next-js-tailwind-dashboard-template/?ref=33" target="_blank" size={'sm'} color={"primary"}>
+                Upgrade To Pro
+              </Button> */
+              }
               <Profile />
             </div>
           </div>

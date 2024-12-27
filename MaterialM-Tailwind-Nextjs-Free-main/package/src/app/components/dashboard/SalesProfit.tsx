@@ -1,15 +1,20 @@
 "use client";
-import { useState } from "react";
+import { useDashboardStore } from "@/app/store/global";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
+import "dayjs/locale/en";
+import { ToggleSwitch } from "flowbite-react";
 import dynamic from "next/dynamic";
-import { Select, ToggleSwitch } from "flowbite-react";
-
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const SalesProfit = () => {
   const [predictMode, setPredictMode] = useState(false);
-  const [predictRange, setPredictRange] = useState(null)
+  const [predictRange, setPredictRange] = useState<Dayjs>(dayjs());
+  const diemQuanTrac = useDashboardStore((state) => state.diemQuanTrac);
+
   // chart
   const optionscolumnchart: any = {
     chart: {
@@ -38,13 +43,13 @@ const SalesProfit = () => {
         opacity: 0.3,
         stops: [100],
         colorStops: [
-          [ 
-            { offset: 0, color: "var(--color-primary)", opacity: 0.1, },
-            { offset: 100, color: "var(--color-primary)", opacity: 0.3, },
+          [
+            { offset: 0, color: "var(--color-primary)", opacity: 0.1 },
+            { offset: 100, color: "var(--color-primary)", opacity: 0.3 },
           ],
-          [ 
-            { offset: 0, color: "#808080", opacity: 0.1, },
-            { offset: 100, color: "#808080", opacity: 0.3, },
+          [
+            { offset: 0, color: "#808080", opacity: 0.1 },
+            { offset: 100, color: "#808080", opacity: 0.3 },
           ],
         ],
       },
@@ -126,15 +131,23 @@ const SalesProfit = () => {
 
   return (
     <div className="rounded-lg dark:shadow-dark-md shadow-md bg-white dark:bg-darkgray p-6 relative w-full break-words">
-      <div className="flex justify-between items-center">
+      <div>
         <h5 className="card-title">Water Monitoring</h5>
-        <ToggleSwitch checked={predictMode} onChange={() => setPredictMode((prev) => !prev) } label="Prediction Mode" />
-        <Select id="countries" className="select-md" disabled={!predictMode} onClick={(e) => console.log((e.target as HTMLSelectElement).value)}>
-          <option>This Week</option>
-          <option>April 2024</option>
-          <option>May 2024</option>
-          <option>June 2024</option>
-        </Select>
+        <div className="flex justify-between items-center gap-4">
+          <label htmlFor="predict-mode">Prediction Mode</label>
+          <ToggleSwitch
+            checked={predictMode}
+            onChange={() => setPredictMode((prev) => !prev)}
+            id="predict-mode"
+          />
+          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="en">
+            <DatePicker
+              disabled={!predictMode}
+              minDate={dayjs()}
+              onChange={(value) => setPredictRange(dayjs(value))}
+            />
+          </LocalizationProvider>
+        </div>
       </div>
 
       <div className="-ms-4 -me-3 mt-2">

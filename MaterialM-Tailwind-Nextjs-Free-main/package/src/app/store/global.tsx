@@ -1,22 +1,14 @@
 import { create } from "zustand";
 
 interface DashboardStore {
-    diemQuanTrac: string;
-    tinh: string;
-    huyen: string;
+    diemQuanTrac: number;
 }
 
 interface DashboardStoreActions {
-    setDiemQuanTrac: (v: string) => void;
-    setTinh: (v: string) => void;
-    setHuyen: (v: string) => void;
+    setDiemQuanTrac: (v: number) => void;
 }
 
 export const useDashboardStore = create<DashboardStore & DashboardStoreActions>()((set) => ({
-    diemQuanTrac: "",
-    tinh: "",
-    huyen: "",
+    diemQuanTrac: 0,
     setDiemQuanTrac: (v) => set({ diemQuanTrac: v }),
-    setTinh: (v) => set({ tinh: v }),
-    setHuyen: (v) => set({ huyen: v }),
 }));

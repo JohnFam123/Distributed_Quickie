@@ -11,10 +11,10 @@ const page = () => {
   return (
     <>
       <div className="grid grid-cols-12 gap-30">
-        <div className="lg:col-span-6 col-span-12">
+        <div className="lg:col-span-5 col-span-12">
           <PopularProducts />
         </div>
-        <div className="lg:col-span-6 col-span-12">
+        <div className="lg:col-span-7 col-span-12">
           <SalesProfit />
         </div>
         {
