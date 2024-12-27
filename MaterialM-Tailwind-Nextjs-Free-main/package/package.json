@@ -1,6 +1,6 @@
 {
-  "name": "materialm-nextjs-free",
-  "version": "1.0.0",
+  "name": "water-monitoring",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -20,7 +20,8 @@
     "react-apexcharts": "1.4.1",
     "react-dom": "18",
     "sharp": "0.32.6",
-    "simplebar-react": "3.2.5"
+    "simplebar-react": "3.2.5",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@types/node": "20",
