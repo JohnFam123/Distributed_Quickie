@@ -7,9 +7,12 @@ import FullLogo from "../../shared/logo/FullLogo";
 import { Drawer } from "flowbite-react";
 import MobileSidebar from "../sidebar/MobileSidebar";
 import Link from "next/link";
+import { Select } from 'flowbite-react';
+import { useDashboardStore } from '@/app/store/global';
 
 const Header = () => {
   const [isSticky, setIsSticky] = useState(false);
+  const { setDiemQuanTrac, setTinh, setHuyen } = useDashboardStore();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,11 +36,10 @@ const Header = () => {
   return (
     <>
       <header
-        className={`sticky top-0 z-[5] ${
-          isSticky
-            ? "bg-lightgray dark:bg-dark shadow-md fixed w-full"
-            : "bg-transparent"
-        }`}
+        className={`sticky top-0 z-[5] ${isSticky
+          ? "bg-lightgray dark:bg-dark shadow-md fixed w-full"
+          : "bg-transparent"
+          }`}
       >
         <Navbar
           fluid
@@ -57,6 +59,21 @@ const Header = () => {
                 <Icon icon="solar:bell-linear" height={20} />
                 <Badge className="h-2 w-2 rounded-full absolute end-2 top-1 bg-primary p-0"></Badge>
               </span>
+            </div>
+
+            <div className="flex gap-4">
+              <Select id="diemQuanTrac" onChange={(e) => setDiemQuanTrac(e.target.value)}>
+                <option>a</option>
+                <option>b</option>
+              </Select>
+              <Select id="tinh" onChange={(e) => setTinh(e.target.value)}>
+                <option>c</option>
+                <option>d</option>
+              </Select>
+              <Select id="huyen" onChange={(e) => setHuyen(e.target.value)}>
+                <option>e</option>
+                <option>f</option>
+              </Select>
             </div>
 
             <div className="flex gap-4 items-center">

@@ -1,13 +1,15 @@
 "use client";
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { Select } from "flowbite-react";
+import { Select, ToggleSwitch } from "flowbite-react";
+
 import { useMemo } from "react";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const SalesProfit = () => {
   const [predictMode, setPredictMode] = useState(false);
+  const [predictRange, setPredictRange] = useState(null)
   // chart
   const optionscolumnchart: any = {
     chart: {
@@ -23,7 +25,7 @@ const SalesProfit = () => {
         show: false,
       },
     },
-    colors: ["var(--color-primary)", "#f00"],
+    colors: ["var(--color-primary)", "#a6a6a6"],
     dataLabels: {
       enabled: false,
     },
@@ -36,29 +38,13 @@ const SalesProfit = () => {
         opacity: 0.3,
         stops: [100],
         colorStops: [
-          [
-            {
-              offset: 0,
-              color: "var(--color-primary)",
-              opacity: 0.1,
-            },
-            {
-              offset: 100,
-              color: "var(--color-primary)",
-              opacity: 0.3,
-            },
+          [ 
+            { offset: 0, color: "var(--color-primary)", opacity: 0.1, },
+            { offset: 100, color: "var(--color-primary)", opacity: 0.3, },
           ],
-          [
-            {
-              offset: 0,
-              color: "#f00",
-              opacity: 0.1,
-            },
-            {
-              offset: 100,
-              color: "#f00",
-              opacity: 0.3,
-            },
+          [ 
+            { offset: 0, color: "#808080", opacity: 0.1, },
+            { offset: 100, color: "#808080", opacity: 0.3, },
           ],
         ],
       },
@@ -71,6 +57,7 @@ const SalesProfit = () => {
     stroke: {
       curve: "smooth",
       width: 2,
+      dashArray: [0, 8],
     },
     xaxis: {
       axisBorder: { show: false },
@@ -140,11 +127,9 @@ const SalesProfit = () => {
   return (
     <div className="rounded-lg dark:shadow-dark-md shadow-md bg-white dark:bg-darkgray p-6 relative w-full break-words">
       <div className="flex justify-between items-center">
-        <h5 className="card-title">Sales Profit</h5>
-        <button onClick={(prev) => setPredictMode(!prev)}>
-          toggle prediction
-        </button>
-        <Select id="countries" className="select-md" required>
+        <h5 className="card-title">Water Monitoring</h5>
+        <ToggleSwitch checked={predictMode} onChange={() => setPredictMode((prev) => !prev) } label="Prediction Mode" />
+        <Select id="countries" className="select-md" disabled={!predictMode} onClick={(e) => console.log((e.target as HTMLSelectElement).value)}>
           <option>This Week</option>
           <option>April 2024</option>
           <option>May 2024</option>
