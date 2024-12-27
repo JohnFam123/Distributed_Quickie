@@ -16,7 +16,10 @@ export const useDiemQuanTracList = () => {
 export const useDiemQuanTrac = (id: number) => {
     return useQuery({
         queryKey: ['diemQuanTracList', id],
-        queryFn: async () => await (axios.get(backendUrl + '/api/v1/place/' + id)).then(res => res.data)
+        queryFn: async () => {
+            const data = await (axios.get(backendUrl + '/api/v1/place/' + id)).then(res => res.data)
+            return data
+        }
     })
 }
 

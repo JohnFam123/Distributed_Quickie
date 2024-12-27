@@ -9,6 +9,6 @@ interface DashboardStoreActions {
 }
 
 export const useDashboardStore = create<DashboardStore & DashboardStoreActions>()((set) => ({
-    diemQuanTrac: 0,
+    diemQuanTrac: 2,
     setDiemQuanTrac: (v) => set({ diemQuanTrac: v }),
 }));
